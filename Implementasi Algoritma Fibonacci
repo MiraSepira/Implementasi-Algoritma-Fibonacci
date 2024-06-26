@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+using namespace std;
+using namespace std::chrono;
+
+// Fungsi dengan pendekatan rekursif
+int fibonacciRecursive(int n) {
+    if (n <= 1)
+        return n;
+    return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
+}
+
+// Fungsi dengan pendekatan dynamic programming
+int fibonacciDP(int n) {
+    if (n <= 1)
+        return n;
+
+    vector<int> dp(n + 1);
+    dp[0] = 0;
+    dp[1] = 1;
+
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+}
+
+// Fungsi untuk mengukur waktu eksekusi
+template<typename Func>
+double measureTime(Func func, int n) {
+    auto start = high_resolution_clock::now();
+    func(n);
+    auto end = high_resolution_clock::now();
+    duration<double> duration = end - start;
+    return duration.count();
+}
+
+int main() {
+    vector<int> testValues = {10, 25, 30, 40, 50};
+
+    cout << "===============================================" << endl;
+    cout << "| n  | Rekursif (detik) | Dynamic Programming (detik) |" << endl;
+    cout << "===============================================" << endl;
+    for (int n : testValues) {
+        double timeRecursive = measureTime(fibonacciRecursive, n);
+        double timeDP = measureTime(fibonacciDP, n);
+        cout << "| " << n << " | " << timeRecursive << " | " << timeDP << " |" << endl;
+    }
+    cout << "===============================================" << endl;
+
+    return 0;
+}
